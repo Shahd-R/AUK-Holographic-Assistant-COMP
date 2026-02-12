@@ -30,7 +30,7 @@ An innovative Holographic Assistant delivering intuitive interactions through NL
 Clone the Repository
 
 ```bash
-  git clone https://github.com/Gwizzlyy/AUK-Holographic-Assistant.git
+  git clone https://github.com/Shahd-R/AUK-Holographic-Assistant-COMP.git
 ```
 Create a Python Environment
 
@@ -50,12 +50,12 @@ Download [mpv](https://mpv.io/) and add it to PATH (User PATH Variables) and set
 
 Launch ```python main.py``` after secrets are configured.
 
-Change ```gpt_recorder()``` to other modes like Voice Activation.
+Change Wakeword activation to other modes like ```manual_recorder()```.
 ```python
 if __name__ == "__main__":
     mpv_process = start_mpv_player()
     try:
-        gpt_recorder() # Call the modes here like manual_recorder()
+        manual_recorder() #Comment out all the code in between "try" and "except KeyboardInterrupt"
     except KeyboardInterrupt:
         print("\nTerminated.")
         if mpv_process:
@@ -76,27 +76,56 @@ To run this project, you will need to add the following environment variables.
 
 `ELEVENLABS_KEY`
 
-`OPENAI_KEY`
-
 `onnx_path`
 
 `model_path`
 
+`mpv_path`
 
+## Web lookup Functionality
+On running as-is, program will look up queries on DuckDuckGo using its API for questions the llm model feels unconfident in its answer. It always outputs the first result which can be hit-or-miss. The API also has a bit of a bug where it sometimes gives an Error 202 (RateLimit). In the case of either of these being bothersome,that portion of the code can be commented out and the program will then default to apologising and stating that it is unconfident to answer the user query instead.
+```python
+        ####################### WEB SEARCH CAPABILITY ######################
+        # Can be used to use DuckDuckGo for looking up the question when the llms confidence is low
+        # Outputs the first web result it finds
+        #If removed, the AI will instead apologise and state that they are unsure of the answer instead.
+    
+        
+    elif low_conf in words:
+        print(" Low confidence detected ; using web search...")
+        global search_query
+        global yay
+        search_query= locc
+        results = search_client.text(
+            keywords=search_query,
+            region="wt_wt",
+            safesearch="off",
+            max_results=1
+        )
+        print(results)
+        output= results[0]["body"]
+        
+        print(f"\nAssistant says:" + results[0]["body"])
+        play_response(output)
+       # start_recorder()
+    
+    #######################################################################################
+```
 ## Example Questions
 - "How many credits do I need to graduate from AUK?"
 - "How can I pay my tuiton?"
 - "What documents do I need to apply?"
+- "Who is the president of AUK?"
 ## Project Structure
 
 ```
 .
-├── main.py                 # Main script
+├── main.py                 # Updated Main script
 ├── model.gguf              # LLaMA model file
 ├── Hellow_wolfy!.onnx      # Wakeword model
 ├── p_idle.mp4              # Idle animation video
 ├── p_talking.mp4           # Talking animation video
-├── requirements.txt        # Includes all the dependencies
+├── requirements.txt        # (Updated) Includes all the dependencies
 └── README.md
 ```
 ## Acknowledgements
